@@ -1,0 +1,166 @@
+/* GENERAL */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f9f9f9;
+    padding: 20px;
+    color: #333;
+  }
+  
+  /* HEADERS */
+  h2, h3 {
+    text-align: center;
+    color: #444;
+    margin-bottom: 20px;
+  }
+  
+  /* INFO BOX */
+  .alert-info {
+    background-color: #e9f7ef;
+    border-left: 5px solid #2ecc71;
+    padding: 15px;
+    border-radius: 8px;
+    font-size: 15px;
+  }
+  
+  /* TEXTAREAS */
+  textarea.form-control.message {
+    background-color: #e1fbe1;
+    border: 1px solid #8bc34a;
+    border-radius: 10px;
+    padding: 15px;
+    width: 100%;
+    font-size: 16px;
+    resize: vertical;
+    min-height: 120px;
+    box-shadow: 0 0 5px rgba(139, 195, 74, 0.3);
+    transition: all 0.3s ease-in-out;
+  }
+  
+  textarea.form-control.message:focus {
+    outline: none;
+    border-color: #4caf50;
+    box-shadow: 0 0 8px rgba(76, 175, 80, 0.5);
+  }
+  
+  /* BUTTONS */
+  button.encode,
+  button.decode {
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    font-size: 16px;
+    border-radius: 25px;
+    cursor: pointer;
+    display: block;
+    margin: 20px auto;
+    transition: background-color 0.3s ease;
+  }
+  
+  button.encode:hover,
+  button.decode:hover {
+    background-color: #c0392b;
+  }
+  
+  /* FORM */
+  .form {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  
+  /* CANVAS SECTION */
+  .images, .decode {
+    margin-top: 30px;
+    text-align: center;
+  }
+  
+  canvas {
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    max-width: 100%;
+    margin: 10px auto;
+  }
+  
+  /* BINARY BOX */
+  .binary, .binary-decode {
+    text-align: center;
+    margin-top: 30px;
+  }
+  
+  .binary textarea,
+  .binary-decode textarea {
+    width: 90%;
+    max-width: 800px;
+    min-height: 100px;
+    margin: 0 auto;
+    background-color: #e1fbe1;
+    border: 1px solid #8bc34a;
+    border-radius: 10px;
+    padding: 10px;
+    font-size: 14px;
+    word-break: break-all;
+  }
+  
+  /* HIDDEN CLASS FOR JS */
+  .hiddenDownloadButton {
+    display: none !important;
+  }
+  .team {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 1em;
+    margin-top: 2em;
+  }
+
+  .team-member {
+    text-align: center;
+  }
+
+  .team-member img {
+    border-radius: 80%;
+    width: 150px;
+    height: 150px;
+  }
+
+  footer {
+    padding: 2em;
+    text-align: center;
+    background-color: #fff3cd;
+  }
+  @keyframes floatIn {
+0% {
+  opacity: 0;
+  transform: translateY(-20px);
+}
+100% {
+  opacity: 1;
+  transform: translateY(0);
+}
+}
+
+header div, header h1, header img {
+animation: floatIn 1s ease-out forwards;
+}
+@keyframes pulse {
+0% { transform: scale(1); }
+50% { transform: scale(1.05); }
+100% { transform: scale(1); }
+}
+
+.lasagna-icon {
+animation: pulse 3s infinite ease-in-out;
+}
+@keyframes gradientShift {
+0% {
+  background-position: 0% 50%;
+}
+100% {
+  background-position: 100% 50%;
+}
+}
+.lasagna-icon2 {
+    width: 200px;
+    height: auto;
+    margin: 1em auto;
+  }
