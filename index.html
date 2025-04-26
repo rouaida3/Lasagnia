@@ -1,0 +1,251 @@
+<html>
+<head>
+  <meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" type="text/css" href="style.css">
+		<link href="https://fonts.googleapis.com/css?family=Slabo+27px|Roboto|Source+Sans+Pro" rel="stylesheet">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+		<title>Lasagna - Steganography</title>
+        <style>
+            body {
+              font-family: 'Open Sans', sans-serif;
+              margin: 0;
+              background-color: #fffbe6;
+              color: #2e2e2e;
+            }
+        
+            header {
+              background: linear-gradient(to right, #fefcea, #d3f9d8);
+              padding: 2em;
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+            }
+        
+            header h1 {
+              font-family: 'Orbitron', sans-serif;
+              font-size: 2.5em;
+              margin: 0;
+            }
+        
+            nav {
+              background-color: #4d7c0f;
+              padding: 1em;
+              display: flex;
+              justify-content: center;
+              gap: 2em;
+            }
+        
+            nav a {
+              color: white;
+              text-decoration: none;
+              font-weight: bold;
+            }
+        
+            .section {
+              padding: 2em;
+              text-align: center;
+            }
+        
+            .section h2 {
+              font-family: 'Orbitron', sans-serif;
+              color: #a31f1f;
+            }
+        
+            .lasagna-icon {
+              width: 100px;
+              height: auto;
+              margin: 1em auto;
+            }
+            .overview {
+                max-width: 800px;
+                margin: 0 auto 60px;
+                padding: 30px;
+                font-family: 'Roboto', sans-serif;
+                color: #333;
+                line-height: 1.7;
+                border-radius: 4px;}
+            .overview h2 {
+                font-family: 'Orbitron', sans-serif;
+                color: #222;
+                font-size: 2.2rem;
+                margin-bottom: 20px;
+                padding-bottom: 10px;
+                border-bottom: 2px solid #e1e1e1;}
+                </style>
+          
+</head>
+<body>
+
+    <div class="container">
+        <header>
+          <div>
+            <img src="pics security website/logo.png" alt="Lasagna Logo" class="lasagna-icon" />
+            <h1>Introducing</h1>
+            <h1> Lasagna</h1>
+            <button class="green-btn" href="#overview">Learn More</button>
+          </div>
+          <img src="pics security website/phone.png" alt="Lasagna Logo"  />
+          
+        </header>
+      
+        <nav>
+          <a href="#encode"> Encode </a>
+          <a></a>
+          <a href="#decode"> Decode</a>
+          <a></a>
+          <a href="#tutorial">Tutorial Video</a>
+          <a></a>
+          <a href="#team">Team</a>
+          <a></a>
+          <a href="#contact">Contact</a>
+        </nav>
+      
+        <div class="section">
+          <h1><strong>Multiple layers of security, disguise, and encryption baked into one seamless solution</strong></h1>
+        </div>
+        <div class = "overview" id="overview">
+            <div class = "col-sm-8 col-md-8">
+              <h2>Overview</h2>
+              <p>Lasagna is an innovative security solution that combines multiple layers of encryption, steganography, and obfuscation to protect your sensitive data. Just like the delicious dish it's named after, Lasagna stacks powerful security techniques to create a robust defense system that's greater than the sum of its parts.</p>
+              <p><b>How It Works</b>
+                  <li><b>Encrypt Layer:</b> Securely transform your data using encryption</li>
+                  
+                  <li><b>Disguise Layer:</b> Embed your encrypted data within innocent-looking files</li>
+                  
+                  <li><b>Obfuscate Layer:</b> Add decoy data and false trails to confuse potential interceptors</li></p>   
+                <h2>STEGNOGRAPHY</h2>
+                <p>the practice of hiding secret information within ordinary, non-secret files or messages to avoid detection. Unlike encryption, which scrambles data to make it unreadable, steganography conceals the very existence of the data</p>
+             </div>
+        </div>
+      
+        <div class="section" id="tutorial">
+          <img src="your-video-placeholder.png" alt="Tutorial Video" style="width:60%; border-radius: 10px;" />
+        </div>
+
+    <div id="my-tab-content" class="tab-content">
+      <div class="tab-pane active" id="encode">
+        <div>
+          <h2>Encode message</h2>
+          <p class="alert alert-info">
+            To encode a message into an image, choose the image you want to use, enter your text and hit the <strong>Encode</strong> button. <br/>
+            Save the last image, it will contain your hidden message. <br/>
+            Remember, the more text you want to hide, the larger the image has to be. In case you chose an image that is to small to hold your message you will be informed.<br/><br/>
+            Neither the image nor the message you hide will be at any moment transmitted over the web, all the magic happens within your browser.
+          </p>
+          <form class="form">
+            <div class="form-group">
+              <input class="form-control" type="file" name="baseFile" onchange="previewEncodeImage()">
+            </div>
+
+            <div class="form-group">
+              <textarea class="form-control message" rows="3" placeholder="Enter your message here"></textarea>
+              <label>Secret Key:</label>
+              <input type="text" name="key" placeholder="Enter your key">
+            </div>
+
+            <div class="form-group">
+              <button class="encode btn btn-default pull-right" onclick="encodeMessage()">Encode</button>
+            </div>
+          </form>
+          <div class="clearfix"></div>
+        </div>
+
+        <div class="binary" style="display: none;">
+          <h3>Binary representation of your message</h3>
+          <textarea class="form-control message" style="word-wrap:break-word;" readonly></textarea>
+        </div>
+        
+        <div class="binary" style="display: none;">
+          <h3>Obfuscated Binary representation of your message</h3>
+          <textarea class="form-control binary_Obf_textarea" style="word-wrap:break-word;" readonly></textarea>
+        </div>
+        
+        <div class="images" style="display: none;">
+          <div class="original" style="display: none;">
+            <h3>Original</h3>
+            <canvas></canvas>
+          </div>
+          <div class="nulled" style="display: none;">
+            <h3>Normalized</h3>
+            <canvas></canvas>
+          </div>
+          <div class="message" style="display: none;">
+            <h3>Message hidden in image (right click <span class="glyphicon glyphicon-arrow-right"></span> save as)</h3>
+            <canvas></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div class="tab-pane" id="decode">
+        <div>
+          <h2>Decode image</h2>
+          <p class="alert alert-info">
+            To decode a hidden message from an image, just choose an image and hit the <strong>Decode</strong> button.<br/><br/>
+            Neither the image nor the message that has been hidden will be at any moment transmitted over the web, all the magic happens within your browser.
+          </p>
+          <form class="form">
+            <div class="form-group">
+              <input class="form-control" type="file" name="decodeFile" onchange="previewDecodeImage()">
+            </div>
+            <div class="form-group">
+              <button class="decode btn btn-default pull-right" onclick="decodeMessage()">Decode</button>
+            </div>
+          </form>
+          <div class="clearfix"></div>
+        </div>
+        <div class="binary-decode" style="display: none;">
+          <h3>Hidden message</h3>
+          <textarea class="form-control message" style="word-wrap:break-word;">
+          </textarea>
+        </div>
+        <div class="decode" style="display: none;">
+          <h3>Input</h3>
+          <canvas></canvas>
+        </div>
+      </div>
+
+    </div>
+
+    
+		<script type = "text/javascript" src = "./js/index.js"></script>
+
+  </div>
+  <div class="section" id="team">
+    <h2>Meet the Team:</h2>
+    <div class="team">
+      <div class="team-member">
+        <img src="pics security website/ROUAIDA.png" alt="Team Member" />
+        <p>Rouaida Hentati</p>
+      </div>
+      <div class="team-member">
+        <img src="pics security website/HADIL.png" alt="Team Member" />
+        <p>Hadil Mabrouk</p>
+      </div>
+      <div class="team-member">
+        <img src="pics security website/ARIJ.png" alt="Team Member" />
+        <p>Arij Khlif</p>
+      </div>
+      <div class="team-member">
+        <img src="pics security website/TAKWA.png" alt="Team Member" />
+        <p>Takwa Delensi</p>
+      </div>
+    </div>
+  </div>
+
+  <footer id="contact" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; padding: 2em; background-color: #fff3cd; border-top: 2px solid #facc15;">
+    <div style="max-width: 60%;">
+      <h3 style="margin: 0 0 1em 0; font-family: 'Orbitron', sans-serif; color: #4d7c0f;">Contact us</h3>
+      <a href="mailto:rouaidahentatitbs@gmail.com" class="green-btn" style="display: inline-block; margin-bottom: 0.5em; padding: 0.7em 1.2em; text-decoration: none; border-radius: 8px;">Email Us</a><br/>
+      <a href="https://github.com/rouaida3/Lasagnia" target="_blank" class="green-btn" style="display: inline-block; padding: 0.7em 1.2em; text-decoration: none; border-radius: 8px;">Visit GitHub</a>
+    </div>
+  
+    <img src="pics security website/logo.png" alt="Lasagna Logo" class="lasagna-icon2" style="margin-top: 1em;" />
+  </footer>
+  
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+  <script type="text/JavaScript" src="script.js"></script>
+</body>
+</html>
