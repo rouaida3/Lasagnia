@@ -140,6 +140,8 @@
 
             <div class="form-group">
               <textarea class="form-control message" rows="3" placeholder="Enter your message here"></textarea>
+              <label>Secret Key:</label>
+              <input type="text" name="key" placeholder="Enter your key">
             </div>
 
             <div class="form-group">
@@ -149,12 +151,16 @@
           <div class="clearfix"></div>
         </div>
 
-        <div class="error" style="display: none;"></div>
         <div class="binary" style="display: none;">
           <h3>Binary representation of your message</h3>
-          <textarea class="form-control message" style="word-wrap:break-word;">
-          </textarea>
+          <textarea class="form-control message" style="word-wrap:break-word;" readonly></textarea>
         </div>
+        
+        <div class="binary" style="display: none;">
+          <h3>Obfuscated Binary representation of your message</h3>
+          <textarea class="form-control binary_Obf_textarea" style="word-wrap:break-word;" readonly></textarea>
+        </div>
+        
         <div class="images" style="display: none;">
           <div class="original" style="display: none;">
             <h3>Original</h3>
