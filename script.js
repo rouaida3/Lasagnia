@@ -207,5 +207,3 @@ function decodeMessage() {
     $('.binary-decode textarea').text(decryptedMessage);
     $('.binary-decode').fadeIn();
   }
-  
-}
