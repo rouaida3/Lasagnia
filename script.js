@@ -81,7 +81,6 @@ function deobfuscateBinary(obfuscatedBinaryMessage) {
     }
     return cleanBinary;
 }
-
 // === ENCODING FUNCTION ===
 function encodeMessage() {
     $(".error").hide();
@@ -100,6 +99,11 @@ function encodeMessage() {
     var $nulledCanvas = $('.nulled canvas');
     var $messageCanvas = $('.message canvas');
   
+    if (!$originalCanvas[0]) {
+        alert("Please select an image first");
+        return;
+    }
+    
     var originalContext = $originalCanvas[0].getContext("2d");
     var nulledContext = $nulledCanvas[0].getContext("2d");
     var messageContext = $messageCanvas[0].getContext("2d");
@@ -108,8 +112,10 @@ function encodeMessage() {
     var height = $originalCanvas[0].height;
   
     // Check if the message is too large for the image
-    if ((text.length * 8 + 16) > (width * height * 3)) { // 16 bits for the length
-        alert("Text too long for chosen image...");
+    // We need 10 bits per character (8 bits + 2 obfuscation bits) plus 16 bits for length
+    var requiredBits = (text.length * 8 * 10/8) + 16 * 10/8;
+    if (requiredBits > (width * height * 3)) {
+        alert("Text too long for chosen image. This image can store approximately " + Math.floor((width * height * 3) / (10/8)) + " characters.");
         return;
     }
   
@@ -134,7 +140,7 @@ function encodeMessage() {
     var encryptedText = xorEncrypt(text, key);
     
     console.log("Original text:", text);
-    console.log("Encrypted text:", encryptedText);
+    console.log("Encrypted text length:", encryptedText.length);
   
     // Step 2: Convert the encrypted text to binary
     var binaryMessage = "";
@@ -156,11 +162,27 @@ function encodeMessage() {
     }
     var binaryMessageWithLength = messageLengthBinary + binaryMessage;
     
-    console.log("Message length (binary):", messageLengthBinary);
+    console.log("Message length (binary):", messageLengthBinary, "=", messageLength);
     console.log("Binary message with length:", binaryMessageWithLength.length, "bits");
   
-    // Step 4: Obfuscate the binary message
-    var obfuscatedBinaryMessage = obfuscateBinary(binaryMessageWithLength);
+    // Step 4: Obfuscate the binary message (8 data bits + 2 random bits)
+    var obfuscatedBinaryMessage = "";
+    for (var i = 0; i < binaryMessageWithLength.length; i += 8) {
+        if (i + 8 <= binaryMessageWithLength.length) {
+            obfuscatedBinaryMessage += binaryMessageWithLength.substr(i, 8);
+            // Add 2 random bits after each byte
+            obfuscatedBinaryMessage += Math.round(Math.random()) + "" + Math.round(Math.random());
+        } else {
+            // Handle the last partial byte if exists
+            var remaining = binaryMessageWithLength.substr(i);
+            obfuscatedBinaryMessage += remaining;
+            while (remaining.length < 8) {
+                remaining += "0";
+            }
+            obfuscatedBinaryMessage += Math.round(Math.random()) + "" + Math.round(Math.random());
+        }
+    }
+    
     $('.binary_Obf_textarea').text(obfuscatedBinaryMessage); // Show obfuscated binary
     
     console.log("Obfuscated binary length:", obfuscatedBinaryMessage.length, "bits");
@@ -197,7 +219,6 @@ function encodeMessage() {
     
     alert("Message successfully encoded! Right-click on the resulting image and save it.");
 }
-
 // === DECODING FUNCTION ===
 function decodeMessage() {
     console.log("Decoding started...");
@@ -218,48 +239,75 @@ function decodeMessage() {
     var imageData = decodeContext.getImageData(0, 0, width, height);
     var pixels = imageData.data;
     
-    // Step 1: Extract all LSBs
+    // Step 1: Extract all LSBs from the image
     var binaryMessage = '';
-    for (var i = 0; i < pixels.length; i += 4) {
+    // We only need to extract enough bits for a reasonable message
+    // Let's limit to 100KB of data max (800,000 bits)
+    var maxBits = Math.min(800000, width * height * 3);
+    
+    for (var i = 0; i < pixels.length && binaryMessage.length < maxBits; i += 4) {
         for (var j = 0; j < 3; j++) { // Only read RGB, skip Alpha
             binaryMessage += (pixels[i + j] & 1).toString();
-            // Stop after we've collected enough bits (safety)
-            if (binaryMessage.length > width * height * 3) {
-                break;
+            if (binaryMessage.length >= maxBits) break;
+        }
+    }
+    
+    console.log("Extracted raw binary length:", binaryMessage.length, "bits");
+    
+    // Step 2: Deobfuscate the binary - try different patterns
+    // Original pattern: 8 bits data + 2 bits garbage
+    var cleanBinary = '';
+    
+    // Try standard deobfuscation (8 data bits + 2 random bits)
+    cleanBinary = deobfuscateStandard(binaryMessage);
+    console.log("Deobfuscated binary length (standard):", cleanBinary.length, "bits");
+    
+    // Try to extract the message length
+    var messageLength = 0;
+    var valid = false;
+    
+    if (cleanBinary.length >= 16) {
+        var messageLengthBinary = cleanBinary.substr(0, 16);
+        messageLength = parseInt(messageLengthBinary, 2);
+        console.log("Extracted message length:", messageLength, "characters");
+        
+        // Check if message length seems reasonable
+        if (!isNaN(messageLength) && messageLength > 0 && messageLength < 10000) {
+            valid = true;
+        }
+    }
+    
+    // If standard deobfuscation didn't work, try alternative patterns
+    if (!valid) {
+        console.log("Standard deobfuscation didn't yield valid length, trying alternative patterns...");
+        
+        // Try just using LSBs directly (no obfuscation)
+        var directBinary = binaryMessage;
+        if (directBinary.length >= 16) {
+            var directLengthBinary = directBinary.substr(0, 16);
+            var directLength = parseInt(directLengthBinary, 2);
+            console.log("Direct length extraction:", directLength);
+            
+            if (!isNaN(directLength) && directLength > 0 && directLength < 10000) {
+                cleanBinary = directBinary;
+                messageLength = directLength;
+                valid = true;
+                console.log("Using direct LSB extraction");
             }
         }
-        if (binaryMessage.length > width * height * 3) {
-            break;
-        }
     }
     
-    console.log("Extracted binary length:", binaryMessage.length, "bits");
-    
-    // Step 2: Deobfuscate the binary
-    var cleanBinary = deobfuscateBinary(binaryMessage);
-    console.log("Deobfuscated binary length:", cleanBinary.length, "bits");
-    
-    if (cleanBinary.length < 16) {
-        alert("Could not extract enough data from the image. Are you sure this image contains hidden data?");
-        return;
-    }
-    
-    // Step 3: Read message length (first 16 bits)
-    var messageLengthBinary = cleanBinary.substr(0, 16);
-    var messageLength = parseInt(messageLengthBinary, 2);
-    console.log("Extracted message length:", messageLength, "characters");
-    
-    if (isNaN(messageLength) || messageLength <= 0 || messageLength > 10000) {
-        alert("Invalid message length detected. This image may not contain hidden data or the data is corrupted.");
+    if (!valid) {
+        alert("Could not detect a valid message in this image. Please make sure you've selected an image with embedded data and are using the correct key.");
         return;
     }
     
     // Step 4: Extract the actual message binary
     var messageBinary = cleanBinary.substr(16, messageLength * 8);
-    console.log("Message binary length:", messageBinary.length, "bits");
+    console.log("Message binary length:", messageBinary.length, "bits (need", messageLength * 8, "bits)");
     
     if (messageBinary.length < messageLength * 8) {
-        alert("The extracted data is incomplete. The image might be corrupted or doesn't contain the complete message.");
+        alert("The extracted data is incomplete. This could be because the image doesn't contain enough data or the image was processed after encoding.");
         return;
     }
     
@@ -277,11 +325,35 @@ function decodeMessage() {
     var decryptedMessage = xorDecrypt(encryptedMessage, key);
     console.log("Decrypted message:", decryptedMessage);
     
+    // Check if message contains mostly printable characters
+    var printableCount = 0;
+    for (var i = 0; i < decryptedMessage.length; i++) {
+        var code = decryptedMessage.charCodeAt(i);
+        if (code >= 32 && code <= 126) {
+            printableCount++;
+        }
+    }
+    var printableRatio = printableCount / decryptedMessage.length;
+    console.log("Printable character ratio:", printableRatio);
+    
     // Step 7: Display the result
     $(".binary-decode textarea").val(decryptedMessage);
     $(".binary-decode").fadeIn();
     
-    if (!decryptedMessage || decryptedMessage.trim() === "") {
-        alert("No message was found or the decryption key is incorrect.");
+    if (printableRatio < 0.7) {
+        alert("Message decoded, but may be incorrect. Try a different key or check if the image was modified after encoding.");
+    } else {
+        alert("Message successfully decoded!");
     }
+}
+
+// Standard deobfuscation (8 data bits + 2 random bits)
+function deobfuscateStandard(obfuscatedBinaryMessage) {
+    var cleanBinary = "";
+    for (var i = 0; i < obfuscatedBinaryMessage.length; i += 10) {
+        if (i + 8 <= obfuscatedBinaryMessage.length) {
+            cleanBinary += obfuscatedBinaryMessage.substr(i, 8);
+        }
+    }
+    return cleanBinary;
 }
