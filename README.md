@@ -1,4 +1,4 @@
-# Lasagnia - Image Steganography
+# Lasagna - Image Steganography
 “Lasagnia” is a metaphor for our system — multiple layers of security, disguise, and encryption baked into one seamless solution.”
 
 Lasagna is a modern, playful, and secure web-based tool that lets users hide secret messages inside images using multi-layered steganography techniques—just like the layers of a delicious lasagna. It's designed with both simplicity and style in mind, making encryption fun and accessible for everyone.
